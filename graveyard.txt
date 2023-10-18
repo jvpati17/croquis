@@ -1,0 +1,256 @@
+stack graveyard
+
+found in models/user:
+
+async function login(req, res) {
+    try {
+        const user = await User.findOne({email: req.body.email});
+        if (!user) throw new Error();
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if (!match) throw new Error();
+        const token = createJWT(user);
+        res.json(token);
+    } catch (err) {
+        res.status(400).json('Bad Credentials');
+    }
+}
+
+auth page:
+
+ function handleLogin() {
+        userService.login();
+        setUser(setUser);
+    }
+
+     <LogInForm onClick={ handleLogin } setUser={ setUser } /> 
+
+
+prior users-api:
+
+     import sendRequest from './send-request';
+const BASE_URL =  '/api/users';
+
+export async function signUp(userData) {
+    const res = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    });
+
+    if (res.ok) {
+        return res.json();
+    } else {
+        throw new Error('Invalid Sign Up');
+    }
+}
+
+export async function login(credentials) {
+    const res = await fetch(`${BASE_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials)
+    });
+
+    if (res.ok) {
+        return res.json();
+    } else {
+        throw new Error('Invalid Log In');
+    }
+}
+
+from controllers/api/users.js :
+
+async function login(req, res) {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) throw new Error(); 
+        const match = await bcrypt.compare( req.body.password, user.password );
+        if (!match) throw new Error();
+        res.json( createJWT(user));
+    } catch {
+        res.status(400).json('Bad Credentials');
+    }
+}
+
+
+FROM COMPONENTS/NEWCOLLECTIONFORM:
+
+ const handleCreateCollection = async (evt) => {
+        evt.preventDefault();
+        if (collectionName) {
+            setCollections([...collections, collectionName]);
+            setCollectionName('');
+        }
+    };
+
+    ALSO:
+
+    const handleInputChange = (evt) => {
+        try {
+            setCollectionName({
+                [evt.target.collectionname]: evt.target.value
+            });
+        } catch {
+            this.setState({ error: 'collection creation failed'});
+        }
+    };
+
+ALSO:
+
+return (
+        <div>
+            <input 
+                type="text"
+                placeholder='name your collection'
+                value={collectionName}
+                onChange={handleInputChange}/>
+            <button onClick={handleCreateCollection}>start collection</button>
+
+            <ul>
+                {collections.map((collection, index) => (
+                    <li key={index}>{collection}</li>
+                ))}
+            </ul>
+        </div>
+    );
+
+    ALSO:
+
+    const handleCreateCollection = async (evt) => {
+        evt.preventDefault();
+        try {
+            const formData = {collection};
+            const collection = await collectionsService.newCollection(formData);
+            setCollection(collection); 
+        } catch {
+            setError('collection failed to create');
+        }
+    };
+
+
+FROM: APP.JSX:
+
+
+          <Route path='/collections/:id' element={<CollectionDetailPage user={user}/>} />
+          <Route path='/collections/:id/edit' element={<EditCollectionPage user={user}/>} />
+
+          under  PROXY  IN PACKAGE.JSON:
+
+          /*"description": "CLONABLE REPO for all your MERN-Stack needs including:",
+  "main": "crud-helper.js",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"*/
+
+  CONTROLLERS/API/COLLECTIONS:
+
+  /*async function edit(req, res) {
+    const collection = await Collection.findById(req.params.id);
+    res.json(collection);
+}*/
+
+/*async function createCollection(req, res) {
+    const { name } = req.body;
+
+    try {
+        const newCollection = await Collection.create({ name });
+        //await newCollection.save();
+        res.status(201).json(newCollection);
+    } catch (error) {
+        res.status(500).json({ error: 'collection creation failed' });
+    }
+}
+
+async function getAllCollections(req, res) {
+    try {
+        const collections = await Collection.find();
+        res.json(collections);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+async function show(req, res) {
+    const collection = await Collection.findById(req.params.id);
+    res.json(collection);
+}*/
+
+ROUTES/API/COLLECTIONS:
+
+//router.get('/new', ensureLoggedIn, collectionsCtrl.new);
+//router.get('/edit', ensureLoggedIn, collectionsCtrl.edit);
+//router.get('/:id', collectionsCtrl.show);
+/*router.post('/', collectionsCtrl.createCollection);
+router.get('/', collectionsCtrl.getAllCollections);
+router.get('/:id', collectionsCtrl.show);*/
+
+
+COLLECTIONFORM:
+
+/* HANDLE COLLECTION CLICK LATER:  export default function CollectionForm() {
+    
+    function handleClick(collectionClick) {
+        console.log(collectionClick)
+        const collectionClick = collections.find(
+            coll =>
+            coll.name ===
+            collectionClick)
+    }
+    return (
+        <div
+        className='CollectionForm'
+        onClick={() => handleClick()}></div>
+    )
+}*/
+
+
+//import { Link } from 'react-router-dom';
+// LATER: import './CollectionForm.css;
+
+// <Link to={`/collections/${collections.id}`}>
+
+NEWCOLLECTIONFORM:
+
+ //const [collection, setCollection] = React.useState(NewCollectionForm);
+
+    //const [newCollection, setCollection] = React.useState(NewCollectionForm());
+
+    //LATER: const navigate = useNavigate();
+            //const newCollection = await collectionsAPI.createCollection(newCollection);
+            //const newCollectionData = {...newCollection};
+            //newCollectionData.user = user;
+            //const collection = await collectionsAPI.createCollection(newCollectionData);
+            //setCollection({name: ''});
+            //setCollection(collection);
+            //setCollection(newCollection);
+            //setCollection(newCollection);
+            //const [newCollection, setCollection] = React.useState(NewCollectionForm())
+
+            COLLECTIONPAGE:
+
+            //const {id} = useParams();
+
+    /*useEffect(function() {
+        //(async function getCollections() {
+        (async function() {
+            const collections = await collectionsAPI.getAll();
+            //const allCollections = await collectionsAPI.getAll();
+            //collections(allCollections);
+            setCollections(collections);
+            //setCollections(allCollections);
+            
+        })().catch((err) => {console.log(err)})
+    }, [])
+    //}, []) */
+
+    COLLECTION-API:
+
+
+/*export async function getById(id) {
+    return sendRequest(`${BASE_URL}/${id}`);
+}
+
+/*export function getCollection(collectionId) {
+    return sendRequest(`${BASE_URL}/${collectionId}`);
+}*/

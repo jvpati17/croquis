@@ -3,24 +3,24 @@ import { Routes, Route } from 'react-router-dom';
 import { getUser } from '../../utilities/users-service';
 import './App.css';
 import AuthPage from '../AuthPage/AuthPage';
-import SignedInPage from '../SignedInPage/SignedInPage';
-import NewDataPage from '../NewDataPage/NewDataPage';
 import NavBar from '../../components/NavBar/NavBar';
-//import userEvent from '@testing-library/user-event';
+import CollectionsPage from '../CollectionsPage/CollectionsPage';
+
 
  export default function App() {
   const [user, setUser] = useState(getUser());
+  const [collections, setCollections] = useState([]);
+  
   return (
     <main className="App">
       { user ?
           <> 
+          <p>cro·​quis welcome { user.username }  krō-ˈkē </p>
         <NavBar user={ user } setUser={ setUser } />
         <Routes>
-          <Route path="/signedin" element={<SignedInPage />} />
-          <Route path="/newdata" element={<NewDataPage />} />
+          <Route path="/" element={ <CollectionsPage user={user} collections={ collections } setCollections= { setCollections }/>} />
         </Routes>
           </>
-
        :
       <AuthPage setUser={ setUser } />
       }

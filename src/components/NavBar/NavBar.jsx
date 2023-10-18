@@ -10,12 +10,6 @@ export default function NavBar({ user, setUser }) {
 
     return (
         <nav>
-            <span>Welcome, { user.username }</span>
-            &nbsp; | &nbsp;
-            <Link to="/signedin">Signed In Page</Link>
-            &nbsp; | &nbsp;
-            <Link to="/newdata">New Data Page</Link>
-            &nbsp; | &nbsp;
             <Link to="" onClick={ handleLogout }>Log Out</Link>
         </nav>
     )
