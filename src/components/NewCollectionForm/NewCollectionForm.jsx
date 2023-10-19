@@ -1,13 +1,12 @@
 import { useState } from 'react';
-//possibly useEffect as well
-//LATER: import { useNavigate } from 'react-router-dom';
 import * as collectionsAPI from '../../utilities/collections-api';
-//LATER: import './NewCollectionForm.css';
+//import { collection } from '../../../models/Collection';
+import './NewCollectionForm.css';
 
-export default function NewCollectionForm({ setCollections }) {
-    const [newCollection, setNewCollection] = useState({
+export default function NewCollectionForm({ setCollections }) {   
+    const [newCollection, setNewCollection] = useState({ 
         collection: ''
-    });
+        });
 
     function handleChange(evt) {
         const updateCollection = { ...newCollection, [evt.target.name]: evt.target.value };
@@ -16,40 +15,36 @@ export default function NewCollectionForm({ setCollections }) {
 
     async function handleSubmit(evt) {
         evt.preventDefault();
-        try {
-          const newCollectionData = await collectionsAPI.createCollection({ name: newCollection.collection });
-          setCollections(prevCollections => [newCollectionData, ...prevCollections]);
-          setNewCollection({ collection: '' });
-        } catch (err) {
+        try {         
+            const newCollectionData = await collectionsAPI.createCollection({ name: newCollection.collection });
+            setCollections(prevCollections => [newCollectionData, ...prevCollections]); 
+            setNewCollection({ collection: '' }); 
+            } catch (err) {
           console.log(err);
         }
       }
-
-    /*async function handleSubmit(evt) {
-        evt.preventDefault()
-        try {
-            await collectionsAPI.createCollection({ name: newCollection.collection })
-            setNewCollection({collection: ''})
-            
-        } catch (err) {
-            console.log(err);
-        }
-    }*/
-   
-
     return (
         <div className='NewCollectionForm'>
+           
             <form
             autoComplete='off'
-            onSubmit={handleSubmit}>
-                <input 
+            onSubmit={handleSubmit}
+            className='newCollectionForm'>
+                
+                
+                <input                
                 type="text" 
-                placeholder='collection name' 
+                placeholder='collection item name'
                 name='collection'
                 required
-                value={ newCollection.collection }
+                value={newCollection.collection}
                 onChange={handleChange} 
-                /> <button type='submit'>start collection</button> 
+                />
+                <button
+                    type='submit'>
+                    add 2 ur collection
+                </button>
+                
             </form>
         </div>
     )

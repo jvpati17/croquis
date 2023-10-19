@@ -1,0 +1,20 @@
+
+
+.newCollectionForm {
+    
+    align-items: center;
+    margin-bottom: 1vmin;
+    margin-top: 1vmin;
+    padding: 1vmin;
+    color: var(--text-light);
+    background-color: rgb(62, 247, 62);
+    border: .2vmin solid black;
+    border-radius: 1vmin;
+    font-size: 4vmin;
+}
+
+button {
+    display: flex;
+    background-color: rgb(231, 94, 190);
+    border-radius: 5vmin;
+}

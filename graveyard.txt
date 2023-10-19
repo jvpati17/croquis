@@ -254,3 +254,387 @@ NEWCOLLECTIONFORM:
 /*export function getCollection(collectionId) {
     return sendRequest(`${BASE_URL}/${collectionId}`);
 }*/
+
+/*<form onSubmit={handleCreatePiece}>
+                    <input
+                    type='text'
+                    placeholder='piece name'
+                    value={pieceName}
+                    onChange={(evt) => setPieceName(evt.target.value)}
+                    />
+                    <textarea 
+                    placeholer='piece description'
+                    value={pieceDescription}
+                    onChange={(evt) => setPieceDescription(evt.target.value)}
+                    />
+                    <button type='submit'>create piece</button>
+                </form>*/
+
+PIECEPAGE.JSX:
+
+import NewPieceForm from '../../components/NewPieceForm/NewPieceForm';
+import { useState } from  'react';
+
+export default function PiecePage({ collections, navCollection, pieces, setPieces}) {
+    return (
+        <>
+        <div className='PiecePage'>
+            <NewPieceForm
+            collections={ collections }
+            navCollections={ navCollections }
+            pieces={ pieces }
+            setPieces={ setPieces } />
+        </div>
+        </>
+    )
+}
+
+PIECES-API:
+
+import sendRequest from "./send-request";
+const BASE_URL = '/api/pieces';
+
+export async function createPiece(piece) {
+    
+    return sendRequest(BASE_URL, 'POST', piece);
+}
+
+export async function getAll() {
+    return sendRequest(BASE_URL);
+}
+
+export async function deletePiece(id) {
+    return sendRequest(`${BASE_URL}/${id}`, 'DELETE');
+}
+
+/*export async function createPiece(collectionId, piece) {
+    return sendRequest(`${BASE_URL}/${collectionId}/pieces`, 'POST', piece);
+}*/
+
+COMPONENTS/PIECEFORM.JSX:
+
+import { useState } from 'react';
+import * as piecesAPI from '../../utilities/pieces-api';
+
+export default function PieceForm({ piece, pieces, setPieces, idx }) {
+    
+}
+
+COMPONENTS/NewPieceForm.JSX:
+
+import { useState } from 'react';
+import * as piecesAPI from '../../utilities/pieces-api';
+import * as collectionsAPI from '../../utilities/collections-api';
+import { useNavigate } from 'react-router-dom';
+
+export default function NewPieceForm({ setPieces, piece }) {
+    const [ newPieces, setNewPieces ] = useState('')
+    const navigate = useNavigate()
+
+    async function handleSubmit(evt) {
+        evt.preventDefault()
+        try {
+            newPieces.collection = setPieces._id 
+            //newPieces.position = 1
+            piecesAPI.createPiece(newPieces)
+            setNewPieces({piece})
+            navigate('/pieces')
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    function handleChange(evt) {
+        const updatePieces = { ...newPieces, [evt.target.name]: evt.target.value};
+        setNewPieces(updatePieces)
+    }
+
+    return (
+        <div className='NewPieceForm'>
+            <form autocomplete='off' onSubmit={handleSubmit}>
+                <input
+                type='text'
+                name='piece'
+                onChange={handleChange}
+                value={ newPieces.piece }
+                />
+                <button type='submit'>add piece to collection</button>
+            </form>
+        </div>
+    )
+}
+
+ROUTES/API/PIEECES:
+
+const express = require('express');
+const router = express.Router();
+const piecesCtrl = require('../../controllers/api/pieces');
+const ensureLoggedIn = require('../../config/ensureLoggedIn');
+
+router.get('/', ensureLoggedIn, piecesCtrl.index);
+router.post('/', ensureLoggedIn, piecesCtrl.create);
+router.get('/:collection', ensureLoggedIn, piecesCtrl.getId);
+router.delete('/:id', ensureLoggedIn, piecesCtrl.delete);
+//router.post('/:collectionId/pieces', ensureLoggedIn, collectionsCtrl.createPiece);
+
+module.exports = router;
+
+
+MODELS/PIECE.JS:
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const pieceSchema = new Schema ({
+    collection: {
+        type: Schema.Types.ObjectId,
+        ref: 'Collection',
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        reequired: true
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
+}, {timestamps:true})
+
+module.exports = mongoose.model('Piece', pieceSchema)
+
+CONTROLLERS/PIECES.JS:
+
+const Piece = require('../../models/piece');
+
+
+module.exports = {
+    index,
+    create,
+    getId,
+    delete: deletePiece,
+    
+}
+
+async function index(req, res) {
+    console.log(req.user, 'piece ctrl here')
+    try{
+        const pieces = await Piece.find({ user: req.user._id});
+        res.json(pieces)
+    } catch (err) {
+        res.status(400).json(err)
+    }
+}
+
+async function create(req, res) {
+    console.log(req.body)
+    try {
+        //const { name, description, collectionId } = req.body;
+        req.body.user = req._id;
+        const piece = await Piece.create(req.body);
+        console.log(piece);
+        res.json(piece);
+    } catch (err) {
+        console.err(err);
+        res.status(400).json(err);
+    }
+}
+
+
+...previous collectionform.jsx to handle pieces:
+
+import { useNavigate } from 'react-router-dom';
+//LATER: import'./CollectionForm
+import { useState, Link } from 'react';
+import * as collectionsAPI from '../../utilities/collections-api';
+import NewPieceForm from '../NewPieceForm/NewPieceForm';
+//import { createPiece } from '../../utilities/pieces-api';
+
+
+export default function CollectionForm({ collections, name, id, setCollections, piece }) {
+    const navigate = useNavigate();
+    //const [pieceName, setPieceName] = useState('');
+    //const [pieceDescription, setPieceDescription] = useState('');
+
+    /*async function handleCreatePiece(evt) {
+        evt.preventDefault();
+        try {
+            await collectionsAPI.createPiece(id, { name: pieceName, description: pieceDescription });
+            setPieceName('');
+            setPieceDescription('');
+        } catch (err) {
+            console.log(err);
+        }
+    }*/
+
+    async function handleDelete() {
+        try {
+            await collectionsAPI.deleteCollection(id);
+            setCollections(prevCollections => prevCollections.filter(collection => collection._id !== id));
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function handleAddPiece(addPiece) {
+        console.log(addPiece);
+        const addPieceObj = piece.find(p => p.collection === addPiece);
+        console.log('addPiece: ', addPieceObj)
+        //setNavPiece(addPieceObj);
+        navigate('/pieces')
+    }
+
+    return (
+        <div autoComplete='off'
+        className='CollectionForm'
+        onClick={() => handleAddPiece(piece)}>
+            
+            <div className='collection-form'>
+                <div className='text-container'>
+                    <button>{name}</button>
+                    <p>add collection piece</p>
+                    <NewPieceForm />
+                </div>
+                <button className='deleteBtn' onClick={handleDelete}>delete</button>
+                { piece }
+            </div>
+            
+        </div>
+    )
+}
+
+previous app.jsx to handle pieces:
+
+import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { getUser } from '../../utilities/users-service';
+import './App.css';
+import AuthPage from '../AuthPage/AuthPage';
+import NavBar from '../../components/NavBar/NavBar';
+import CollectionsPage from '../CollectionsPage/CollectionsPage';
+import PiecePage from '../PiecePage/PiecePage';
+
+
+ export default function App() {
+  const [user, setUser] = useState(getUser());
+  const [collections, setCollections] = useState([]);
+  const [navCollection, setNavCollection] = useState({});
+  
+  return (
+    <main className="App">
+      { user ?
+          <> 
+          <p>cro·​quis welcome { user.username }  krō-ˈkē </p>
+        <NavBar user={ user } setUser={ setUser } />
+        <Routes>
+          <Route path="/" element={ <CollectionsPage user={user} collections={ collections } setCollections= { setCollections }/>} />
+          <Route path="/pieces/new" element={ <PiecePage user={user} collections={ collections } navCollection= { navCollection } pieces={ pieces } setPieces={ setPieces }/>} />
+        </Routes>
+          </>
+       :
+      <AuthPage setUser={ setUser } />
+      }
+    </main>
+  );
+}
+
+...previous useEffect from  collectionspage.jsx:
+
+ /*useEffect(function() {
+        const intervalId = setInterval(() => {
+            getCollections();
+        }, 1000);
+        return () => clearInterval(intervalId);
+    }, []);*/
+    
+    /* ORIGINAL HERE: useEffect(function() {
+        async function getCollections() {
+            const collections = await collectionsAPI.getAll();
+            setCollections(collections);
+           
+            
+        }
+        getCollections();
+    }, []);*/
+
+    ...previous controllers/api/collections.js...
+     meant to handle  new  pieces:
+
+     const Collection = require('../../models/Collection');
+
+
+module.exports = {
+    index,
+    create,
+    getId,
+    delete: deleteCollection,
+    createPiece
+}
+
+async function index(req, res) {
+    try {
+        const collections = await Collection.find({
+            user: req.user._id
+        })
+        console.log(req.user)
+        res.json(collections)
+    } catch (err) {
+        console.log(err)
+        res.status(400).json(err)}
+}
+
+async function create(req, res) {
+    console.log(req.user)
+    try  {
+        req.body.user = req.user._id
+        const collection = await Collection.create(req.body);
+        console.log(collection)
+        res.json(collection);
+    } catch  (err) {
+        res.status(400).json(err)}
+}
+
+async function getId(req, res) {
+    try {
+        const collection = await Collection.find({ _id: req.params.collection })
+        console.log(collection)
+        res.json(collection)
+    } catch(err)  {
+        res.satus(400).json(err)
+    }
+}
+async function deleteCollection(req, res) {
+    try {
+        // console.log(req.params)
+        const deletedCollection = await Collection.findByIdAndDelete(req.params.id);
+        res.json(deletedCollection);
+    } catch (err) {
+        console.log(err)
+        res.status(400).json(err)}
+}
+
+async function createPiece(req, res) {
+    try {
+        const { name, description } = req.body;
+        const collection = await Collection.findById(req.params.collectionId);
+        if (!collection) {
+            return res.status(400).json(err)
+        }
+
+        const newPiece = {
+            name,
+            description
+        };
+        collection.pieces.push(newPiece);
+        await collection.save();
+        res.json(collection);
+    } catch (err) {
+        console.error(err);
+        res.status(400).json(err);
+    }
+}

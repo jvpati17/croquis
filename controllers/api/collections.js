@@ -1,4 +1,5 @@
 const Collection = require('../../models/Collection');
+//const { editCollectionFunction } = require('../../src/utilities/collections-api');
 
 
 module.exports = {
@@ -6,6 +7,7 @@ module.exports = {
     create,
     getId,
     delete: deleteCollection
+    //edit: editCollectionFunction  
 }
 
 async function index(req, res) {
@@ -42,10 +44,20 @@ async function getId(req, res) {
 }
 async function deleteCollection(req, res) {
     try {
-        // console.log(req.params)
+        console.log(req.params)
         const deletedCollection = await Collection.findByIdAndDelete(req.params.id);
         res.json(deletedCollection);
     } catch (err) {
         console.log(err)
         res.status(400).json(err)}
 }
+
+/*async function editCollectionFunction(req, res) {
+    try {
+        console.log(req.params)
+        const editCollectionFunction = await Collection.findByIdAndUpdate(req.params.id);
+        res.json(editCollectionFunction)
+    } catch (err) {
+        console.log(err)
+        res.status(400).json(err)}
+}*/

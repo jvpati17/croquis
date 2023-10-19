@@ -1,0 +1,12 @@
+.CroquisBoard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1vmin;
+  padding: 2vmin;
+  color: var(--text-light);
+  background-color: rgb(62, 247, 62);
+  border: .1vmin solid var(--tan-3);
+  border-radius: 2vmin;
+  font-size: 3vmin;
+}

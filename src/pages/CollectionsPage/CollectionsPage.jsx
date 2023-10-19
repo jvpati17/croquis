@@ -2,10 +2,12 @@ import {useState, useEffect } from 'react';
 import * as collectionsAPI from '../../utilities/collections-api';
 import CollectionForm from '../../components/CollectionForm/CollectionForm';
 import NewCollectionForm from '../../components/NewCollectionForm/NewCollectionForm';
-//LATER: import './CollectionsPage.css';
+import './CollectionsPage.css';
 
-export default function CollectionsPage() {
+export default function CollectionsPage({ user }) {
     const [collections, setCollections] = useState([]);
+    //const [editCollection,  editedCollection] = useState(false);
+    //const editMode  = useState(false);
 
     async function getCollections() {
         try {
@@ -17,30 +19,12 @@ export default function CollectionsPage() {
       }
     
       useEffect(() => {
-        getCollections();  // Initial fetch
+        getCollections(); 
         const intervalId = setInterval(() => {
-          getCollections();  // Fetch collections periodically
-        }, 1000); // Adjust the interval as needed
-    
+          getCollections();  
+        }, 237000); 
         return () => clearInterval(intervalId);
       }, []);
-
-    /*useEffect(function() {
-        const intervalId = setInterval(() => {
-            getCollections();
-        }, 1000);
-        return () => clearInterval(intervalId);
-    }, []);*/
-    
-    /* ORIGINAL HERE: useEffect(function() {
-        async function getCollections() {
-            const collections = await collectionsAPI.getAll();
-            setCollections(collections);
-           
-            
-        }
-        getCollections();
-    }, []);*/
 
     const collectionForms = collections.map((collections, idx) =>
     <CollectionForm
@@ -48,23 +32,21 @@ export default function CollectionsPage() {
     setCollections={ setCollections }
     key={idx} 
     name={ collections.name } 
-    id={ collections._id } />)
+    id={ collections._id }
+    //user= { user }
+    /*editCollection={editCollection}
+    editMode={editMode}*/ />) 
 
     return (
-        <div className='CollectionsPage'>
+        <main className='CollectionsPage'>
             
-            <p>new collections form</p>
-            <NewCollectionForm collections={collections} setCollections={setCollections} />   
-            
-               <p>collections form</p>
-                
-                <div> { collectionForms }</div>
-                
-                
-                
+                <NewCollectionForm
+                    collections={collections}
+                    setCollections={setCollections}             
+                />   
                
-            
-        </div>
+            <div> { collectionForms }</div>           
+        </main>
     )
 }
 

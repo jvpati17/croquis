@@ -1,9 +1,8 @@
-//LATER: import { useNavigate } from 'react-router-dom';
-//LATER: import'./CollectionForm
+//import { useState } from 'react';
 import * as collectionsAPI from '../../utilities/collections-api';
-
-
-export default function CollectionForm({ collections, name, id, setCollections }) {
+import './CollectionForm.css';
+export default function CollectionForm({  name, id, collections, setCollections }) {
+    
     async function handleDelete() {
         try {
             await collectionsAPI.deleteCollection(id);
@@ -12,17 +11,26 @@ export default function CollectionForm({ collections, name, id, setCollections }
             console.error(err);
         }
     }
-
     return (
-        <div autoComplete='off' className='CollectionForm'>
-            
+        <div autoComplete='off'
+        className='CollectionForm'>          
             <div className='collection-form'>
-                <div className='text-container'>
-                    <h4>{collections.name}</h4>
+                <div className='text-container'>      
+                    {name}                   
                 </div>
-                <button onClick={handleDelete}>delete</button>
-            </div>
-            
+                
+                <button
+                    className='editBtn'
+                    >
+                    edit
+                </button>
+                <button
+                    className='deleteBtn'
+                    onClick={handleDelete}>
+                    delete
+                </button>   
+                                                
+            </div>       
         </div>
     )
 }

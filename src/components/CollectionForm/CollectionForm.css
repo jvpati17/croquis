@@ -1,0 +1,31 @@
+.CollectionForm {
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1vmin;
+  padding: 1vmin;
+  color: var(--text-light);
+  background-color: rgb(62, 247, 62);
+  border: .2vmin solid black;
+  border-radius: 2vmin;
+  font-size: 3vmin;
+}
+
+.collection-form {
+    background-color: rgb(62, 247, 62);
+}
+
+.text-container {
+    
+    background-color: whitesmoke;
+    border-radius: 3vmin;
+    
+}
+
+.button {
+    display: flex;
+    flex-direction: column;
+    color: rgb(221, 51, 230);
+    
+
+}

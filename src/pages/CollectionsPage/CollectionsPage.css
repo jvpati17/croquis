@@ -1,0 +1,10 @@
+
+.CollectionsPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: .10vmin 10vmin;
+  background-color: rgb(250, 74, 215);
+  border-radius: 10vmin;
+  border: 1.5vmin solid rgb(70, 243, 70);
+}
