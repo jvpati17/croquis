@@ -32,7 +32,8 @@ export default function NewCollectionForm({ setCollections }) {
             className='newCollectionForm'>
                 
                 
-                <input                
+                <input  
+                className='collectioninput'              
                 type="text" 
                 placeholder='collection item name'
                 name='collection'

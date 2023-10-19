@@ -8,9 +8,9 @@ export default function AuthPage({ setUser, setCredentials }) {
     return (
         <main>
             <h1>croquis : krō-kē</h1>
-            <p>already a member ? please login</p>
+            <h4>already a member ? please login</h4>
             <LogInForm setUser={ setUser } setCredentials={ setCredentials } />
-            <p>create an account</p>
+            <h4>create an account</h4>
             <SignUpForm setUser={ setUser } /> 
         </main>
     );

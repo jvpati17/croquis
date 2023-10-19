@@ -11,10 +11,15 @@
     border: .2vmin solid black;
     border-radius: 1vmin;
     font-size: 4vmin;
+    
 }
 
 button {
     display: flex;
     background-color: rgb(231, 94, 190);
     border-radius: 5vmin;
+}
+
+.collectioninput {
+    background-color: whitesmoke;
 }
