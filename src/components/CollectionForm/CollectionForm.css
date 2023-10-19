@@ -18,14 +18,11 @@
 .text-container {
     
     background-color: whitesmoke;
-    border-radius: 3vmin;
-    
+    border-radius: 3vmin;   
 }
 
 .button {
     display: flex;
     flex-direction: column;
     color: rgb(221, 51, 230);
-    
-
 }
